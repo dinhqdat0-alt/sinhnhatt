@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gửi Tiểu Thảo 💐</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: radial-gradient(circle at bottom, #ff9a9e 0%, #fecfef 99%, #feada6 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            touch-action: none;
+        }
+
+        /* --- HỘP THƯ DỄ THƯƠNG --- */
+        #envelope-wrapper {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #fecfef;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: all 0.8s ease;
+            cursor: pointer;
+        }
+
+        .container {
+            position: relative;
+            animation: float 3s ease-in-out infinite; /* Hiệu ứng bay bồng bềnh */
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .envelope {
+            position: relative;
+            width: 250px;
+            height: 160px;
+            background-color: #ff8c94;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            box-shadow: 0 15px 35px rgba(255, 71, 87, 0.3);
+        }
+
+        /* Nắp phong bì */
+        .envelope::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            z-index: 2;
+            border-top: 100px solid #ff4757;
+            border-left: 125px solid transparent;
+            border-right: 125px solid transparent;
+            transform-origin: top;
+            transition: all 0.5s ease;
+        }
+
+        /* Các cạnh gấp bên trong */
+        .envelope::after {
+            content: "";
+            position: absolute;
+            z-index: 1;
+            width: 0;
+            height: 0;
+            border-top: 80px solid transparent;
+            border-right: 125px solid #ffb3ba;
+            border-bottom: 80px solid #ffb3ba;
+            border-left: 125px solid #ffb3ba;
+            border-radius: 0 0 15px 15px;
+        }
+
+        .heart {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            width: 50px;
+            height: 50px;
+            background: #ffffff;
+            z-index: 4;
+            transform: translate(-50%, -50%) rotate(45deg);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .heart::before, .heart::after {
+            content: "";
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: #ffffff;
+            border-radius: 50%;
+        }
+
+        .heart::before { top: -25px; left: 0; }
+        .heart::after { left: -25px; top: 0; }
+
+        .heart-icon {
+            position: relative;
+            z-index: 5;
+            transform: rotate(-45deg);
+            font-size: 25px;
+        }
+
+        .tap-text {
+            margin-top: 50px;
+            color: #ff4757;
+            font-weight: bold;
+            font-size: 1.4rem;
+            text-align: center;
+            letter-spacing: 1px;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* --- NỘI DUNG CHÍNH (Giữ nguyên từ code cũ) --- */
+        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        .card {
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 30px;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            text-align: center;
+            max-width: 85%;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+        }
+        .card.open { opacity: 1; transform: scale(1); pointer-events: auto; }
+        h1 { color: #ffffff; font-size: 2.2rem; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); }
+        .name-rosie { color: #ff4757; display: block; font-size: 3.2rem; margin-bottom: 15px; font-weight: bold; text-shadow: 2px 2px 10px rgba(255, 71, 87, 0.3); }
+        p { color: #444; font-size: 1.1rem; line-height: 1.6; font-weight: 500; }
+        #btn-love {
+            font-size: 1.4rem; font-weight: 800; color: #ffffff; cursor: pointer;
+            background: #ff4757; border: none; padding: 12px 25px; border-radius: 50px;
+            animation: heartBeat 1.2s infinite; display: block; margin: 20px auto 0;
+            text-decoration: none; box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
+        }
+        @keyframes heartBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        .balloon { position: absolute; bottom: -50px; pointer-events: none; animation: floatUp linear forwards; opacity: 0.8; z-index: 100; }
+        @keyframes floatUp { to { transform: translateY(-110vh) translateX(30px); } }
+    </style>
+</head>
+<body>
+    <div id="envelope-wrapper" onclick="openCard()">
+        <div class="container">
+            <div class="envelope">
+                <div class="heart">
+                    <span class="heart-icon">💐</span>
+                </div>
+            </div>
+        </div>
+        <div class="tap-text">Gửi Tiểu Thảo...<br>(Chạm để mở nè)</div>
+    </div>
+
+    <canvas id="canvas"></canvas>
+    <div class="card" id="main-card">
+        <h1>Happy Birthday</h1>
+        <span class="name-rosie">Tiểu Thảo 💐</span>
+        <p>Chúc bạn tuổi mới luôn xinh đẹp rạng ngời, hạnh phúc và gặt hái được nhiều thành công mới. Mọi điều ngọt ngào nhất sẽ luôn bên bạn!</p>
+        <button id="btn-love">NHẤN VÀO ĐÂY</button>
+    </div>
+
+    <audio id="music" loop>
+        <source src="https://www.chosic.com/wp-content/uploads/2021/04/Happy-Birthday-Music-Box.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const btnLove = document.getElementById('btn-love');
+        const music = document.getElementById('music');
+        const envelope = document.getElementById('envelope-wrapper');
+        const card = document.getElementById('main-card');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particles = [];
+        function createFirework(x, y) {
+            const color = `hsl(${Math.random() * 360}, 100%, 75%)`;
+            for (let i = 0; i < 40; i++) {
+                particles.push({
+                    x, y,
+                    vx: (Math.random() - 0.5) * 15,
+                    vy: (Math.random() - 0.5) * 15,
+                    alpha: 1,
+                    color: color
+                });
+            }
+        }
+
+        function openCard() {
+            // Hiệu ứng nắp phong bì mở lên
+            document.querySelector('.envelope').style.transition = "0.5s";
+            
+            envelope.style.opacity = '0';
+            setTimeout(() => {
+                envelope.style.visibility = 'hidden';
+                card.classList.add('open');
+                music.play();
+                
+                // Pháo hoa nổ tung rầm rộ
+                for(let i=0; i<12; i++) {
+                    setTimeout(() => {
+                        createFirework(
+                            Math.random() * canvas.width, 
+                            Math.random() * (canvas.height / 2)
+                        );
+                    }, i * 150);
+                }
+            }, 600);
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, i) => {
+                p.x += p.vx; p.y += p.vy;
+                p.vy += 0.12; p.alpha -= 0.015;
+                ctx.globalAlpha = p.alpha;
+                ctx.fillStyle = p.color;
+                ctx.beginPath(); ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2); ctx.fill();
+                if (p.alpha <= 0) particles.splice(i, 1);
+            });
+            requestAnimationFrame(draw);
+        }
+        draw();
+
+        const balloonEmojis = ['🎈', '💐', '🎂', '✨', '🌸'];
+        function createBalloon() {
+            if (envelope.style.visibility === 'hidden') {
+                const balloon = document.createElement('div');
+                balloon.className = 'balloon';
+                balloon.innerHTML = balloonEmojis[Math.floor(Math.random() * balloonEmojis.length)];
+                balloon.style.left = Math.random() * 100 + 'vw';
+                balloon.style.fontSize = (Math.random() * 15 + 20) + 'px';
+                const duration = (Math.random() * 4 + 6);
+                balloon.style.animationDuration = duration + 's';
+                document.body.appendChild(balloon);
+                setTimeout(() => balloon.remove(), duration * 1000);
+            }
+        }
+        setInterval(createBalloon, 600);
+
+        btnLove.addEventListener('click', () => {
+            btnLove.innerHTML = "🎂 生日快乐 🎂";
+            btnLove.style.background = "#2ed573";
+            for(let i=0; i<15; i++) {
+                setTimeout(() => createFirework(Math.random()*canvas.width, Math.random()*canvas.height), i * 200);
+            }
+        });
+
+        setInterval(() => {
+            if(envelope.style.visibility === 'hidden' && Math.random() > 0.6) {
+                createFirework(Math.random()*canvas.width, Math.random()*canvas.height/1.5);
+            }
+        }, 1200);
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
